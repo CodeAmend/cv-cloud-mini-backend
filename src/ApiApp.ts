@@ -1,4 +1,12 @@
 import express, { Application } from "express";
+import cors, { CorsOptions } from "cors";
+import menuRoute from "./routers/MenuRoute";
+
+const corsOptions: CorsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:5000"],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+};
 
 class ApiApp {
   private application: Application;
@@ -22,12 +30,14 @@ class ApiApp {
 
   private setupGlobalMiddleware() {
     this.application.use(express.json());
+    this.application.use(cors(corsOptions));
   }
 
   private setupRouters() {
     this.application.get("/", (_, res) => {
-      res.json({ message: "Welcome to our service!" });
+      res.json({ message: "Welcome to the app!" });
     });
+    this.application.use("/menu", menuRoute.getRouter());
   }
 }
 
