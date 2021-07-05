@@ -1,4 +1,4 @@
-import menuController from "./MenuController";
-import cartController from "./CartController";
+import menuController from "./menuController";
+import cartController from "./cartController";
 
 export { menuController, cartController };

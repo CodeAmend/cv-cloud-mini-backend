@@ -14,7 +14,7 @@ const io = new SocketIOServer(httpServer, {
   cors: {
     origin: "http://localhost:3000",
     credentials: true,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE", "UPDATE"],
   },
 });
 

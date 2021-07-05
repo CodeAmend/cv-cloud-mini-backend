@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-import startExpressServer from "./index";
+import startExpressServer from "./server";
 
 dotenv.config();
 

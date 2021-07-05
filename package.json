@@ -1,7 +1,7 @@
 {
   "name": "backend-server",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "author": "Michael Bruce Allen <michael.allen@lcecorp.com>",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint ./src --ext .ts",
     "prestart": "npm run build",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/index.js",
     "dev": "nodemon"
   },
   "dependencies": {
