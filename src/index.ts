@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-
-import startExpressServer from "./server";
+import serverApp from "./server";
 
 dotenv.config();
 
@@ -13,5 +12,5 @@ dotenv.config();
     useCreateIndex: true,
   });
 
-  startExpressServer();
+  serverApp.AppInstance;
 })();

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { mocked } from "ts-jest/utils";
-import { Query } from "mongoose";
 
 import CartController from "./CartController";
 import { MockedObject } from "ts-jest/dist/utils/testing";
@@ -38,7 +37,7 @@ describe("MenuConroller", () => {
   });
 
   describe("getCartItems", () => {
-    it("returns 400 with message for no items", async () => {
+    it("returns 204 with message for no items", async () => {
       CartItemModelMock.find.mockResolvedValue([]);
       await CartController.getCartItems(request, response);
       expect(statusFn).toHaveBeenCalledWith(204);
@@ -72,11 +71,11 @@ describe("MenuConroller", () => {
       });
     });
 
-    it("returns 400 with no items found in menu", async () => {
+    it("returns 204 with no items found in menu", async () => {
       request.body = { name: "cheese" };
       MenuItemModelMock.findOne.mockResolvedValue(null);
       await CartController.addCartItem(request, response);
-      expect(statusFn).toHaveBeenCalledWith(400);
+      expect(statusFn).toHaveBeenCalledWith(204);
       expect(jsonFn).toHaveBeenCalledWith({ message: "No items found!" });
     });
 
@@ -114,11 +113,11 @@ describe("MenuConroller", () => {
       });
     });
 
-    it("returns 400 with no items found in menu", async () => {
+    it("returns 204 with no items found in menu", async () => {
       request.body = { name: "cheese" };
       CartItemModelMock.findOne.mockResolvedValue(null);
       await CartController.addCartItem(request, response);
-      expect(statusFn).toHaveBeenCalledWith(400);
+      expect(statusFn).toHaveBeenCalledWith(204);
       expect(jsonFn).toHaveBeenCalledWith({ message: "No items found!" });
     });
 

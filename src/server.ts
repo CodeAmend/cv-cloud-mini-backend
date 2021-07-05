@@ -1,60 +1,69 @@
 import http from "http";
-import express, { Router } from "express";
+import express, { Router, Application as ExpressApplication } from "express";
 import { Server as SocketIOServer } from "socket.io";
-import cors, { CorsOptions } from "cors";
+import cors from "cors";
+import dotenv from "dotenv";
 import { cartController, menuController } from "./controllers";
+import { corsOptions, socketIOOptions } from "./config";
 
-const app = express();
-const httpServer = http.createServer(app);
+dotenv.config();
+const PORT = process.env.PORT;
 
-const PORT = 5000;
+class ServerApp {
+  public static instance: ServerApp;
+  private app: ExpressApplication;
 
-// Setup socket-io
-const io = new SocketIOServer(httpServer, {
-  cors: {
-    origin: "http://localhost:3000",
-    credentials: true,
-    methods: ["GET", "POST", "DELETE", "UPDATE"],
-  },
-});
+  constructor() {
+    this.app = express();
+    const httpServer = http.createServer(this.app);
 
-// Setup cors
-const corsOptions: CorsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5000"],
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Access-Control-Allow-Origin"],
-};
+    this.app.use(cors(corsOptions));
+    this.app.use(express.json());
 
-app.use(cors(corsOptions));
-app.use(express.json());
+    const menuRoute = Router();
+    menuRoute.get("/", menuController.getMenuItems);
+    menuRoute.post("/add-item", menuController.addMenuItem);
+    this.app.use("/menu", menuRoute);
 
-// MENU ROUTES
-const menuRoute = Router();
-menuRoute.get("/", menuController.getMenuItems);
-menuRoute.post("/add-item", menuController.addMenuItem);
-app.use("/menu", menuRoute);
+    const cartRoute = Router();
+    cartRoute.get("/", cartController.getCartItems);
+    cartRoute.post("/add-item", cartController.addCartItem);
+    cartRoute.delete("/remove-item", cartController.removeCartItem);
+    cartRoute.delete("/clear", cartController.clearCartItems);
+    this.app.use("/cart", cartRoute);
 
-// CART ROUTES
-const cartRoute = Router();
-cartRoute.get("/", cartController.getCartItems);
-cartRoute.post("/add-item", cartController.addCartItem);
-cartRoute.get("/remove-item", cartController.removeCartItem);
-cartRoute.post("/clear", cartController.clearCartItems);
-app.use("/cart", cartRoute);
+    const io = new SocketIOServer(httpServer, socketIOOptions);
+    io.on("connect", (socket) => {
+      console.log("Connected");
+      this.app.set("io", socket);
 
-io.on("connected", (socket) => {
-  console.log("A user connected", console.timeStamp("fred"));
+      socket.on("front-end-message", (data) => {
+        console.log(data);
+      });
 
-  socket.emit("cart-updated");
+      socket.emit("server-restart");
 
-  //Whenever someone disconnects this piece of code executed
-  socket.on("disconnect", function () {
-    console.log("A user disconnected");
-  });
-});
+      socket.on("disconnect", () => {
+        console.log("Disconnected");
+      });
+    });
 
-export default () => {
-  httpServer.listen(PORT, () => {
-    console.log(`Server started at port ${PORT}`);
-  });
-};
+    httpServer.listen(PORT, () => {
+      console.log(`Server started at PORT ${PORT}`);
+    });
+  }
+
+  public get AppInstance() {
+    return this.app;
+  }
+
+  public static get Instance() {
+    if (!ServerApp.instance) {
+      ServerApp.instance = new ServerApp();
+    }
+
+    return ServerApp.instance;
+  }
+}
+
+export default ServerApp.Instance;

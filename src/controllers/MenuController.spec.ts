@@ -33,7 +33,7 @@ describe("MenuConroller", () => {
   });
 
   describe("getMenuItems", () => {
-    it("returns 400 with message for no items", async () => {
+    it("returns 204 with message for no items", async () => {
       MenuItemModelMock.find.mockResolvedValue([]);
       await Controller.getMenuItems(request, response);
       expect(statusFn).toHaveBeenCalledWith(204);
