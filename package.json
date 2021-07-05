@@ -14,12 +14,18 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.10",
+    "@types/express-ws": "^3.0.0",
+    "@types/node": "^16.0.0",
+    "@types/socket.io": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-ws": "^5.0.2",
     "mongoose": "^5.13.1",
     "shortid": "^2.2.16",
-    "validator": "^13.6.0"
+    "socket.io": "^4.1.2",
+    "validator": "^13.6.0",
+    "ws": "^7.5.2"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -29,6 +35,7 @@
     "@types/shortid": "^0.0.29",
     "@types/supertest": "^2.0.11",
     "@types/validator": "^13.6.1",
+    "@types/ws": "^7.4.6",
     "eslint": "^7.29.0",
     "husky": "^7.0.0",
     "jest": "^27.0.6",
