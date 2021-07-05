@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { mocked } from "ts-jest/utils";
 
-import Controller from "./MenuController";
+import Controller from "./menuController";
 import { MockedObject } from "ts-jest/dist/utils/testing";
 import MenuItemModel, { IMenuItemDocument } from "../models/MenuItemModel";
 
