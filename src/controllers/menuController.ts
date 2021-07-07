@@ -24,13 +24,13 @@ const getMenuItems = async (_: Request, res: Response) => {
 const addMenuItem = async (req: Request, res: Response) => {
   const { body } = req;
 
-  console.log(body);
   if (!body || !body?.name || !body?.price) {
     return res.status(400).json({ message: "Must submit a name and price" });
   }
 
   try {
     await MenuItemModel.create(body);
+
     getSocket().emit("add-menu-item");
     return res.status(200).json({ message: "Success!" });
   } catch (error) {
